@@ -13,8 +13,8 @@
 
 ## 📚 개발 가이드
 
-- **🗺️ 개발 로드맵**: `@/docs/ROADMAP.md`
-- **📋 프로젝트 요구사항**: `@/docs/PRD.md`
+> 📋 PRD(`docs/PRD.md`)와 로드맵(`docs/ROADMAP.md`)은 아직 작성되지 않았습니다. 개발 시작 전에 먼저 작성하세요.
+
 - **📁 프로젝트 구조**: `@/docs/guides/project-structure.md`
 - **🎨 스타일링 가이드**: `@/docs/guides/styling-guide.md`
 - **🧩 컴포넌트 패턴**: `@/docs/guides/component-patterns.md`

@@ -31,13 +31,6 @@ export function Header() {
 
           {/* Right Side */}
           <div className="flex items-center gap-4">
-            {!isMobile && (
-              <Link href="/login">
-                <Button variant="outline" size="sm">
-                  로그인
-                </Button>
-              </Link>
-            )}
             <ThemeToggle />
 
             {/* Mobile Menu Button */}
