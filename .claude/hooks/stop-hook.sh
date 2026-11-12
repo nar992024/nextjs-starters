@@ -33,19 +33,20 @@ echo "DEBUG: PROJECT_NAME = '$PROJECT_NAME'" >&2
 echo "DEBUG: TIMESTAMP = '$TIMESTAMP'" >&2
 
 # JSON payload 생성
-PAYLOAD=$(printf '{"channel": "#claude-code", "username": "Claude Code", "text": "✅ 작업 완료 알림\n\n프로젝트: %s\n상태: %s\n시간: %s\n\nClaude Code 작업이 완료되었습니다.", "icon_emoji": ":white_check_mark:"}' "$PROJECT_NAME" "$REASON" "$TIMESTAMP")
+PAYLOAD=$(printf '{"username": "Claude Code", "text": "✅ 작업 완료 알림\n\n프로젝트: %s\n상태: %s\n시간: %s\n\nClaude Code 작업이 완료되었습니다.", "icon_emoji": ":white_check_mark:"}' "$PROJECT_NAME" "$REASON" "$TIMESTAMP")
 
 echo "DEBUG: PAYLOAD = '$PAYLOAD'" >&2
 
-# Slack으로 알림 전송
-curl -X POST \
-  --data-urlencode "payload=$PAYLOAD" \
-  "$SLACK_WEBHOOK_URL" > /dev/null 2>&1
+# Slack으로 알림 전송 (한글 깨짐 방지를 위해 stdin으로 UTF-8 JSON 전달, 채널은 웹훅 기본 채널)
+HTTP_CODE=$(printf '%s' "$PAYLOAD" | curl -s -o /dev/null -w "%{http_code}" -X POST \
+  -H "Content-Type: application/json; charset=utf-8" \
+  --data-binary @- \
+  "${SLACK_WEBHOOK_URL%$'\r'}")
 
-# 성공 여부 확인
-if [ $? -eq 0 ]; then
+# HTTP 상태 코드로 성공 여부 확인
+if [ "$HTTP_CODE" = "200" ]; then
     echo "Slack 알림이 성공적으로 전송되었습니다." >&2
 else
-    echo "Slack 알림 전송에 실패했습니다." >&2
+    echo "Slack 알림 전송에 실패했습니다. (HTTP $HTTP_CODE)" >&2
     exit 1
 fi
